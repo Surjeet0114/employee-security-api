@@ -1,12 +1,14 @@
 package com.surjeet.employee_security_api.exception;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class ApiErrorResponse {
 
     private int status;

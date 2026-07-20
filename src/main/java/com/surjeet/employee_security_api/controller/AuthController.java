@@ -1,5 +1,7 @@
 package com.surjeet.employee_security_api.controller;
 
+import com.surjeet.employee_security_api.dto.LoginRequestDto;
+import com.surjeet.employee_security_api.dto.LoginResponseDto;
 import com.surjeet.employee_security_api.dto.RegisterRequestDto;
 import com.surjeet.employee_security_api.dto.RegisterResponseDto;
 import com.surjeet.employee_security_api.service.AuthService;
@@ -24,4 +26,14 @@ public class AuthController {
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDto> login(
+            @Valid @RequestBody LoginRequestDto requestDto) {
+
+        LoginResponseDto response = authService.login(requestDto);
+
+        return ResponseEntity.ok(response);
+    }
+
 }

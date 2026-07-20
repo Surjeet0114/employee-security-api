@@ -84,6 +84,30 @@
 			<scope>test</scope>
 		</dependency>
 
+        <!--JWT-->
+        <!--jjwt-api : Contains the interfaces.-->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.12.7</version>
+		</dependency>
+
+		<!--jjwt-impl : Contains the actual implementation. Without it, nothing is generated.-->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>0.12.7</version>
+			<scope>runtime</scope>
+		</dependency>
+
+        <!--jjwt-jackson : Converts JWT claims to JSON and back using Jackson.-->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>0.12.7</version>
+			<scope>runtime</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>
