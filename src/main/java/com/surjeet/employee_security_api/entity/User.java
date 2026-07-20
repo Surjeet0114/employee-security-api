@@ -10,6 +10,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 
 public class User {
 
@@ -23,4 +24,6 @@ public class User {
     private Role role;
 
     private Boolean enabled;
+
+    User user = new User();
 }
