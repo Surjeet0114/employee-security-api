@@ -3,6 +3,7 @@ package com.surjeet.employee_security_api.service.impl;
 import com.surjeet.employee_security_api.dto.RegisterRequestDto;
 import com.surjeet.employee_security_api.dto.RegisterResponseDto;
 import com.surjeet.employee_security_api.entity.User;
+import com.surjeet.employee_security_api.exception.UserAlreadyExistsException;
 import com.surjeet.employee_security_api.repository.UserRepository;
 import com.surjeet.employee_security_api.service.AuthService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,8 +25,8 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public RegisterResponseDto register(RegisterRequestDto request) {
 
-        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
-            throw new RuntimeException("Username already exists.");
+        if(userRepository.findByUsername(request.getUsername()).isPresent()){
+            throw new UserAlreadyExistsException("Username already exists.");
         }
 
         User user = User.builder()

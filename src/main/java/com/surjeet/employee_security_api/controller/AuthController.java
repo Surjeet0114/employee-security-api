@@ -4,27 +4,24 @@ import com.surjeet.employee_security_api.dto.RegisterRequestDto;
 import com.surjeet.employee_security_api.dto.RegisterResponseDto;
 import com.surjeet.employee_security_api.service.AuthService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
 
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
-
     @PostMapping("/register")
     public ResponseEntity<RegisterResponseDto> register(
-            @Valid @RequestBody RegisterRequestDto request) {
+            @Valid @RequestBody RegisterRequestDto requestDto) {
 
-        RegisterResponseDto response = authService.register(request);
+        RegisterResponseDto response = authService.register(requestDto);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(response);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }
