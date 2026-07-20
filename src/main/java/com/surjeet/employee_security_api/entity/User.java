@@ -25,5 +25,4 @@ public class User {
 
     private Boolean enabled;
 
-    User user = new User();
 }
