@@ -6,30 +6,28 @@ import com.surjeet.employee_security_api.entity.Employee;
 import com.surjeet.employee_security_api.exception.ResourceNotFoundException;
 import com.surjeet.employee_security_api.repository.EmployeeRepository;
 import com.surjeet.employee_security_api.service.EmployeeService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
 
-    public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
-    }
-
     @Override
-    public EmployeeResponseDto createEmployee(EmployeeRequestDto employeeRequestDto) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public EmployeeResponseDto createEmployee(EmployeeRequestDto dto) {
 
         Employee employee = new Employee();
-
-        employee.setFirstName(employeeRequestDto.getFirstName());
-        employee.setLastName(employeeRequestDto.getLastName());
-        employee.setEmail(employeeRequestDto.getEmail());
-        employee.setDepartment(employeeRequestDto.getDepartment());
-        employee.setSalary(employeeRequestDto.getSalary());
+        employee.setFirstName(dto.getFirstName());
+        employee.setLastName(dto.getLastName());
+        employee.setEmail(dto.getEmail());
+        employee.setDepartment(dto.getDepartment());
+        employee.setSalary(dto.getSalary());
 
         Employee savedEmployee = employeeRepository.save(employee);
 
@@ -37,16 +35,17 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public List<EmployeeResponseDto> getAllEmployees() {
 
-        List<Employee> employees = employeeRepository.findAll();
-
-        return employees.stream()
+        return employeeRepository.findAll()
+                .stream()
                 .map(this::mapToResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public EmployeeResponseDto getEmployeeById(Long id) {
 
         Employee employee = employeeRepository.findById(id)
@@ -57,17 +56,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeResponseDto updateEmployee(Long id, EmployeeRequestDto employeeRequestDto) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public EmployeeResponseDto updateEmployee(Long id, EmployeeRequestDto dto) {
 
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Employee not found with id : " + id));
 
-        employee.setFirstName(employeeRequestDto.getFirstName());
-        employee.setLastName(employeeRequestDto.getLastName());
-        employee.setEmail(employeeRequestDto.getEmail());
-        employee.setDepartment(employeeRequestDto.getDepartment());
-        employee.setSalary(employeeRequestDto.getSalary());
+        employee.setFirstName(dto.getFirstName());
+        employee.setLastName(dto.getLastName());
+        employee.setEmail(dto.getEmail());
+        employee.setDepartment(dto.getDepartment());
+        employee.setSalary(dto.getSalary());
 
         Employee updatedEmployee = employeeRepository.save(employee);
 
@@ -75,6 +75,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteEmployee(Long id) {
 
         Employee employee = employeeRepository.findById(id)
@@ -84,9 +85,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeRepository.delete(employee);
     }
 
-    /**
-     * Converts Employee Entity to EmployeeResponseDto
-     */
     private EmployeeResponseDto mapToResponse(Employee employee) {
 
         EmployeeResponseDto response = new EmployeeResponseDto();
