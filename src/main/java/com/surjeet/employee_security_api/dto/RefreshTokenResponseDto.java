@@ -7,11 +7,9 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class LoginResponseDto {
+public class RefreshTokenResponseDto {
 
     private String accessToken;
-
-    private String refreshToken;
 
     @Builder.Default
     private String tokenType = "Bearer";

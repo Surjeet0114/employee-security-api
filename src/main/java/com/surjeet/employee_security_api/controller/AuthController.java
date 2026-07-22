@@ -1,9 +1,6 @@
 package com.surjeet.employee_security_api.controller;
 
-import com.surjeet.employee_security_api.dto.LoginRequestDto;
-import com.surjeet.employee_security_api.dto.LoginResponseDto;
-import com.surjeet.employee_security_api.dto.RegisterRequestDto;
-import com.surjeet.employee_security_api.dto.RegisterResponseDto;
+import com.surjeet.employee_security_api.dto.*;
 import com.surjeet.employee_security_api.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,18 +19,24 @@ public class AuthController {
     public ResponseEntity<RegisterResponseDto> register(
             @Valid @RequestBody RegisterRequestDto requestDto) {
 
-        RegisterResponseDto response = authService.register(requestDto);
-
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(
+                authService.register(requestDto),
+                HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(
             @Valid @RequestBody LoginRequestDto requestDto) {
 
-        LoginResponseDto response = authService.login(requestDto);
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(
+                authService.login(requestDto));
     }
 
+    @PostMapping("/refresh")
+    public ResponseEntity<RefreshTokenResponseDto> refreshToken(
+            @Valid @RequestBody RefreshTokenRequestDto requestDto) {
+
+        return ResponseEntity.ok(
+                authService.refreshToken(requestDto));
+    }
 }
