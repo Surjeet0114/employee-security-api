@@ -23,15 +23,16 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     @Override
     public RefreshToken createRefreshToken(User user) {
 
-        refreshTokenRepository.findByUser(user)
-                .ifPresent(refreshTokenRepository::delete);
+        RefreshToken refreshToken = refreshTokenRepository.findByUser(user)
+                .orElse(
+                        RefreshToken.builder()
+                                .user(user)
+                                .build()
+                );
 
-        RefreshToken refreshToken = RefreshToken.builder()
-                .token(UUID.randomUUID().toString())
-                .user(user)
-                .expiryDate(LocalDateTime.now().plusDays(REFRESH_TOKEN_VALIDITY_DAYS))
-                .revoked(false)
-                .build();
+        refreshToken.setToken(UUID.randomUUID().toString());
+        refreshToken.setExpiryDate(LocalDateTime.now().plusDays(REFRESH_TOKEN_VALIDITY_DAYS));
+        refreshToken.setRevoked(false);
 
         return refreshTokenRepository.save(refreshToken);
     }

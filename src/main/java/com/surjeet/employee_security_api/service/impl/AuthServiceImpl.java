@@ -8,6 +8,7 @@ import com.surjeet.employee_security_api.repository.UserRepository;
 import com.surjeet.employee_security_api.security.JwtService;
 import com.surjeet.employee_security_api.service.AuthService;
 import com.surjeet.employee_security_api.service.RefreshTokenService;
+import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
@@ -112,5 +114,14 @@ public class AuthServiceImpl implements AuthService {
                 .accessToken(accessToken)
                 .tokenType("Bearer")
                 .build();
+    }
+
+    @Override
+    public void logout(RefreshTokenRequestDto request) {
+
+        RefreshToken refreshToken =
+                refreshTokenService.verifyRefreshToken(request.getRefreshToken());
+
+        refreshTokenService.deleteRefreshToken(refreshToken.getUser());
     }
 }
